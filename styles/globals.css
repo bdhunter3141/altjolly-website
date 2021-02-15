@@ -2,13 +2,18 @@ html,
 body {
   padding: 0;
   margin: 0;
+  font-size: 16px;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 a {
-  color: inherit;
+  color: #18312c;
   text-decoration: none;
+  transition: color .2s ease-in-out;
+}
+a:hover {
+  color: #bce5b1
 }
 
 * {
