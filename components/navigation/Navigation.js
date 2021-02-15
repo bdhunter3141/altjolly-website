@@ -1,29 +1,38 @@
 // imports
+import { motion } from "framer-motion"
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import { down, up } from 'styled-breakpoints'
+import { up } from 'styled-breakpoints'
+import { useBreakpoint } from 'styled-breakpoints/react-styled'
 import styled from 'styled-components'
 import { Container } from '../'
 
 // styled components
 const Layout = styled.nav`
+  position: relative;
   margin: 25px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: ${({theme}) => theme.zIndex.med};
 `
 const NavLinksLayout = styled.div`
   display: none;
   ${up('md')} {
     display: flex;
     align-items: center;
-    text-transform: uppercase;
-    & a {
-      padding: 15px;
-      margin: 0 5px;
-      font-weight: 600;
-    }
+  }
+`
+const LinkLayout = styled(motion.div)`
+  display: ${({navOpen}) => navOpen ? 'block' : 'none'};
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 15px;
+  margin: 0 5px;
+  font-weight: 600;
+  ${up('md')} {
+    display: block;
   }
 `
 const HamburgerLayout = styled.button`
@@ -64,6 +73,23 @@ const LineLayout = styled.div`
   background: ${({theme}) => theme.color.darkGreen};
   transition: ${({theme}) => theme.transition.easeOut};
 `
+const MobileNavLinksLayout = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: ${({theme}) => theme.transition.easeOut};
+  z-index: ${({theme}) => theme.zIndex.low};
+  background-color: ${({theme}) => theme.color.lightGreyGreen};
+  position: absolute;
+  top: 0;
+  left: 25%;
+  right: 0;
+  bottom: 0;
+  ${up('md')} {
+    display: none;
+  }
+`
 
 
 // component definition
@@ -71,6 +97,7 @@ export function Navigation() {
 
   // initialize state
   const [navOpen, setNavOpen] = useState(false)
+  const isDesktop = useBreakpoint(up('md'))
 
   return (
     <Container>
@@ -88,9 +115,7 @@ export function Navigation() {
 
         {/* Desktop Navigation */}
         <NavLinksLayout>
-          <Link href="/our-story"><a>Our Story</a></Link>
-          <Link href="/discount-club"><a>Discount Club</a></Link>
-          <Link href="/contact"><a>Contact</a></Link>
+          {renderNavLinks(isDesktop, navOpen)}
         </NavLinksLayout>
 
         {/* Mobile Navigation */}
@@ -103,6 +128,56 @@ export function Navigation() {
           <LineLayout/>
         </HamburgerLayout>
       </Layout>
+      <MobileNavLinksLayout
+        animate={{ left: navOpen ? '25%' : '100%' }}
+        initial={{ left: '100%' }}
+        navOpen={navOpen}
+      >
+        {renderNavLinks(isDesktop, navOpen)}
+      </MobileNavLinksLayout>
     </Container>
   )
+}
+
+
+// Helpers
+
+const links = [
+  { title: 'Our Story', url: '/our-story' },
+  { title: 'Discount Club', url: '/discount-club' },
+  { title: 'Contact', url: '/contact' },
+]
+
+function renderNavLinks(isDesktop, navOpen) {
+
+  // animations
+  const transition = (i) => {
+    return {
+      delay: navOpen ? (i + 1) * 0.2 : 0,
+      duration: navOpen ? 0.5 : 0.2
+    }
+  }
+  const visible = {
+    opacity: 1
+  }
+  const invisible = {
+    opacity: 0
+  }
+
+
+  return links.map((link, i) => {
+    return (
+      <LinkLayout
+        animate={navOpen || isDesktop ? visible : invisible}
+        exit={invisible}
+        initial={invisible}
+        navOpen={navOpen}
+        transition={transition(i)}
+      >
+        <Link href={link.url}>
+          <a>{link.title}</a>
+        </Link>
+      </LinkLayout>
+    )
+  })
 }
