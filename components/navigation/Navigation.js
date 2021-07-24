@@ -10,12 +10,18 @@ import { Container } from '../'
 
 // styled components
 const Layout = styled.nav`
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: ${({theme}) => theme.zIndex.med};
+`
+const NavLayout = styled.div`
+
   margin: 25px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: ${({theme}) => theme.zIndex.med};
 `
 const NavLinksLayout = styled.div`
   display: none;
@@ -99,35 +105,42 @@ export function Navigation() {
   const [navOpen, setNavOpen] = useState(false)
   const isDesktop = useBreakpoint(up('md'))
 
+  // render
   return (
-    <Container>
+    <>
       <Layout>
-        <Link href="/">
-          <a>
-            <Image
-              src="/assets/logo.png"
-              alt="AltJolly Logo"
-              width={200}
-              height={44}
-            />
-          </a>
-        </Link>
+        <Container>
+          <NavLayout>
+            <Link href="/">
+              <a>
+                <Image
+                  src="/assets/logo.png"
+                  alt="AltJolly Logo"
+                  width={200}
+                  height={44}
+                />
+              </a>
+            </Link>
 
-        {/* Desktop Navigation */}
-        <NavLinksLayout>
-          {renderNavLinks(isDesktop, navOpen)}
-        </NavLinksLayout>
+            {/* Desktop Navigation */}
+            <NavLinksLayout>
+              {renderNavLinks(isDesktop, navOpen)}
+            </NavLinksLayout>
 
-        {/* Mobile Navigation */}
-        <HamburgerLayout
-          navOpen={navOpen}
-          onClick={() => setNavOpen(!navOpen)}
-        >
-          <LineLayout/>
-          <LineLayout/>
-          <LineLayout/>
-        </HamburgerLayout>
+            {/* Mobile Hamburger Menu */}
+            <HamburgerLayout
+              navOpen={navOpen}
+              onClick={() => setNavOpen(!navOpen)}
+            >
+              <LineLayout/>
+              <LineLayout/>
+              <LineLayout/>
+            </HamburgerLayout>
+          </NavLayout>
+        </Container>
       </Layout>
+
+      {/* Mobile Navigation */}
       <MobileNavLinksLayout
         animate={{ left: navOpen ? '25%' : '100%' }}
         initial={{ left: '100%' }}
@@ -135,7 +148,7 @@ export function Navigation() {
       >
         {renderNavLinks(isDesktop, navOpen)}
       </MobileNavLinksLayout>
-    </Container>
+    </>
   )
 }
 
@@ -163,7 +176,6 @@ function renderNavLinks(isDesktop, navOpen) {
   const invisible = {
     opacity: 0
   }
-
 
   return links.map((link, i) => {
     return (
