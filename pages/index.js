@@ -67,10 +67,10 @@ export default function Home() {
               height={44}
             />
 
-            <h1>We are currently undergoing maintenance</h1>
+            {/* <h1>We are currently undergoing maintenance</h1>
 
-            <p>Thank you so much for your patience! We will be back online as soon as we can.</p>
-            {/* <h1>Thank you!</h1>
+            <p>Thank you so much for your patience! We will be back online as soon as we can.</p> */}
+            <h1>Thank you!</h1>
             <p>
               We sincerely thank you for being a customer of AltJolly and we appreciate your support.
               Our amazing customers are the reason that we do what we do.
@@ -86,7 +86,7 @@ export default function Home() {
             <p>
               Lots of love,
             </p>
-            */}
+
             <SignatureLayout>The AltJolly Family</SignatureLayout>
           </TextLayout>
         </ContentLayout>
